@@ -6,6 +6,22 @@ if(!DATABASE_FILE)
 
 
 export const openConnection = () =>{
-  let db = new squilite3.Database(DATABASE_FILE)
+  const db = new squilite3.Database(DATABASE_FILE)
   return db;
+}
+
+export const dbQuery=(query: string, params?: any[])=>{
+  const db = openConnection()
+  return new Promise<any[]>((resolve, rejects)=>{
+    db.all(query,params,(err, rows)=>{
+      if(err)
+        rejects(err)
+      else
+        resolve(rows)
+    })
+  })
+  .finally(()=>{
+    db.close()
+  })
+
 }
